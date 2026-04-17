@@ -1,0 +1,184 @@
+# Abi-web
+Website abii
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ABI SYSTEM X</title>
+
+<style>
+body {
+  margin: 0;
+  background: black;
+  color: lime;
+  font-family: monospace;
+  overflow: hidden;
+}
+
+/* MATRIX EFFECT */
+canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+}
+
+/* loading */
+#loading {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  background: black;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+/* login */
+#login {
+  display: none;
+  text-align: center;
+  margin-top: 40%;
+}
+
+input {
+  padding: 10px;
+  background: black;
+  border: 1px solid lime;
+  color: lime;
+}
+
+button {
+  padding: 10px;
+  background: lime;
+  border: none;
+  cursor: pointer;
+}
+
+/* terminal */
+#terminal {
+  display: none;
+  padding: 10px;
+}
+
+.line {
+  animation: typing 1s steps(30);
+  white-space: nowrap;
+  overflow: hidden;
+}
+
+@keyframes typing {
+  from {width: 0}
+  to {width: 100%}
+}
+</style>
+</head>
+
+<body>
+
+<canvas id="matrix"></canvas>
+
+<div id="loading">Booting System...</div>
+
+<div id="login">
+  <h2>LOGIN SYSTEM</h2>
+  <input type="password" id="pass" placeholder="Enter Password">
+  <br><br>
+  <button onclick="login()">ENTER</button>
+</div>
+
+<div id="terminal"></div>
+
+<audio id="bgm" loop>
+  <source src="https://files.catbox.moe/7wz9o7.mp3" type="audio/mpeg">
+</audio>
+
+<script>
+// MATRIX
+let canvas = document.getElementById("matrix");
+let ctx = canvas.getContext("2d");
+
+canvas.height = window.innerHeight;
+canvas.width = window.innerWidth;
+
+let letters = "01";
+letters = letters.split("");
+
+let fontSize = 14;
+let columns = canvas.width/fontSize;
+let drops = [];
+
+for(let x = 0; x < columns; x++)
+  drops[x] = 1;
+
+function draw(){
+  ctx.fillStyle = "rgba(0, 0, 0, 0.05)";
+  ctx.fillRect(0, 0, canvas.width, canvas.height);
+
+  ctx.fillStyle = "lime";
+  ctx.font = fontSize + "px monospace";
+
+  for(let i = 0; i < drops.length; i++){
+    let text = letters[Math.floor(Math.random()*letters.length)];
+    ctx.fillText(text, i*fontSize, drops[i]*fontSize);
+
+    if(drops[i]*fontSize > canvas.height && Math.random() > 0.975)
+      drops[i] = 0;
+
+    drops[i]++;
+  }
+}
+setInterval(draw, 33);
+
+// loading
+setTimeout(()=>{
+  document.getElementById("loading").style.display="none";
+  document.getElementById("login").style.display="block";
+},2000);
+
+// login
+function login(){
+  let p = document.getElementById("pass").value;
+  if(p === "abi123"){
+    document.getElementById("login").style.display="none";
+    startTerminal();
+    document.getElementById("bgm").play();
+  } else {
+    alert("ACCESS DENIED");
+  }
+}
+
+// terminal
+let lines = [
+"Access Granted...",
+"Connecting...",
+"Bypassing...",
+"Injecting Script...",
+"Tracking Location...",
+"Downloading Data...",
+"System Override...",
+"Welcome Abi 😎",
+"OWNER MODE ACTIVATED 🔥"
+];
+
+function startTerminal(){
+  let term = document.getElementById("terminal");
+  term.style.display="block";
+
+  let i = 0;
+  function addLine(){
+    if(i < lines.length){
+      let div = document.createElement("div");
+      div.className = "line";
+      div.innerText = "> " + lines[i];
+      term.appendChild(div);
+      i++;
+      setTimeout(addLine, 800);
+    }
+  }
+  addLine();
+}
+</script>
+
+</body>
+  </html>
